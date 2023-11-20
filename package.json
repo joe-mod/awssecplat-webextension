@@ -24,18 +24,6 @@
       {
         "command": "dockerContainer.selectContainer",
         "title": "Select Mode"
-      },
-      {
-        "command": "test.Dockerfile",
-        "title": "Dockerfile catalog"
-      },
-      {
-        "command": "dockerContainer.selectContainer.catalog.Docker-Compose",
-        "title": "Docker-Compose catalog"
-      },
-      {
-        "command": "dockerContainer.selectContainer.catalog.Docker_Swarm",
-        "title": "Docker Swarm catalog"
       }
     ],
     "viewsContainers": {

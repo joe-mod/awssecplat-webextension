@@ -42,13 +42,15 @@ export function activate(context: vscode.ExtensionContext) {
 		switch (dockerNodeLabel) {
 			case "Dockerfile":
 				DockerfilePanel.render(context.extensionUri);
+				break;
 			case "Docker-Compose":
 				//DockerComposePanel.render(context.extensionUri);
+				break;
 			case "Docker_Swarm":
 				//DockerSwarmPanel.render(context.extensionUri);
-			default:
-				vscode.window.showInformationMessage("Catalog for your " + dockerNodeLabel);
+				break;
 		}
+		vscode.window.showInformationMessage("Catalog for your " + dockerNodeLabel);
 	});
 
 	context.subscriptions.push(showDockerSelection);

@@ -299,7 +299,7 @@ export class DockerfilePanel {
                 <h4>6. What is correct?</h4>
                 <vscode-checkbox id="6_1_checkbox">Docker has a default limit for parallel running processes </vscode-checkbox><br>
                 <vscode-checkbox id="6_2_checkbox">A memory leak can only cause the stopping of processes that are not the docker daemon</vscode-checkbox><br>
-                <vscode-checkbox id="6_3_checkbox">If a process is using more CPU time than another one, they cannot share the CPU time if is free</vscode-checkbox><br>
+                <vscode-checkbox id="6_3_checkbox">If a process is using more CPU time than another one, they can share the CPU time if is free</vscode-checkbox><br>
                 <vscode-button id="question6_submit">Submit answer</vscode-button>
               </section>
             </section>

@@ -6,7 +6,7 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Run Web Extension ",
+			"name": "Run Web Extension",
 			"type": "pwa-extensionHost",
 			"debugWebWorkerHost": true,
 			"request": "launch",
@@ -18,6 +18,16 @@
 				"${workspaceFolder}/dist/web/**/*.js"
 			],
 			"preLaunchTask": "npm: watch-web"
+		},
+		{
+			"type": "node",
+			"request": "attach",
+			"name": "Attach to Server",
+			"port": 6009,
+			"restart": true,
+			"outFiles": [
+				"${workspaceRoot}/server/dist/**/*.js"
+			]
 		},
 		{
 			"name": "Extension Tests",
@@ -33,6 +43,15 @@
 				"${workspaceFolder}/dist/web/**/*.js"
 			],
 			"preLaunchTask": "npm: watch-web"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Client + Server",
+			"configurations": [
+				"Run Web Extension",
+				"Attach to Server"
+			]
 		}
 	]
 }

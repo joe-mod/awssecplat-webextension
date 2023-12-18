@@ -23,7 +23,11 @@
       },
       {
         "command": "dockerContainer.selectContainer",
-        "title": "Select Mode"
+        "title": "Select mode"
+      },
+      {
+        "command": "dockerScriptView.selectContainerID",
+        "title": "Select container"
       }
     ],
     "viewsContainers": {
@@ -51,10 +55,36 @@
       "view/item/context": [
         {
           "command": "dockerContainer.selectContainer",
+          "when": "view == dockerContainer",
+          "group": "inline"
+        },
+        {
+          "command": "dockerScriptView.selectContainerID",
+          "when": "view == dockerScriptView",
           "group": "inline"
         }
       ]
-    }
+    },
+    "configuration": [
+      {
+        "order": 22,
+        "id": "awssecplat-webextension",
+        "title": "awssecplat-webextension",
+        "properties": {
+          "awssecplat-webextension.trace.server": {
+            "type": "string",
+            "scope": "window",
+            "enum": [
+              "off",
+              "messages",
+              "verbose"
+            ],
+            "default": "verbose",
+            "description": "Traces the communication between VS Code and the lsp-web-extension-sample language server."
+          }
+        }
+      }
+    ]
   },
   "scripts": {
     "test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/index.js",
@@ -63,8 +93,9 @@
     "compile-web": "webpack",
     "watch-web": "webpack --watch",
     "package-web": "webpack --mode production --devtool hidden-source-map",
-    "lint": "eslint src --ext ts",
-    "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
+    "lint": "eslint src ./client/src ./server/src --ext ts",
+    "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. .",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
   },
   "devDependencies": {
     "@types/mocha": "^10.0.3",
@@ -73,11 +104,12 @@
     "@types/webpack-env": "^1.18.3",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
-    "@vscode/test-web": "^0.0.48",
+    "@vscode/test-web": "^0.0.22",
     "assert": "^2.1.0",
     "copy-webpack-plugin": "^11.0.0",
     "eslint": "^8.52.0",
     "mocha": "^10.2.0",
+    "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",

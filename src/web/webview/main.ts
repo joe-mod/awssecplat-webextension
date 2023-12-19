@@ -18,22 +18,27 @@ window.addEventListener("load", main);
 
 
 const catalogCheckboxes = {
-
+  //Dockerfile buttons
   "question1_submit": ["1_1_checkbox", "1_2_checkbox", "1_3_checkbox",],
   "question2_submit": ["2_1_checkbox", "2_2_checkbox", "2_3_checkbox",],
   "question3_submit": ["3_1_checkbox", "3_2_checkbox", "3_3_checkbox",],
   "question4_submit": ["4_1_checkbox", "4_2_checkbox", "4_3_checkbox",],
   "question5_submit": ["5_1_checkbox", "5_2_checkbox", "5_3_checkbox",],
   "question6_submit": ["6_1_checkbox", "6_2_checkbox", "6_3_checkbox",],
+  //Compose buttons
+  "question1_dc_submit": ["1_1_dc_checkbox", "1_2_dc_checkbox", "1_3_dc_checkbox",],
 };
 
 const correctQuestionsCheckboxes = {
+  //Dockerfile buttons
   "question1_submit": ["1_1_checkbox", "1_2_checkbox"],
   "question2_submit": ["2_1_checkbox", "2_2_checkbox", "2_3_checkbox"],
   "question3_submit": ["3_2_checkbox"],
   "question4_submit": ["4_1_checkbox", "4_3_checkbox"],
   "question5_submit": ["5_1_checkbox"],
   "question6_submit": ["6_3_checkbox"],
+  //Compose buttons
+  "question1_dc_submit": ["1_1_dc_checkbox", "1_2_dc_checkbox", "1_3_dc_checkbox",],
 };
 
 

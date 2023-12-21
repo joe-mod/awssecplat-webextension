@@ -86,7 +86,7 @@ const webviewConfig = {
 	plugins: [
 		new copyPlugin({ // copying css to be part of the build
 			patterns: [
-				{ from: "./web/webview/*.css", to: "/dist/web", context: 'src',},
+				{ from: "./web/webview/*.css", to: "./dist/web", context: 'src',},
 			]
 		})
 	]

@@ -3,8 +3,8 @@ import { Uri } from "vscode";
 
 export function getDockerfileHTML(webviewUri: Uri, styleUri: Uri, nonce: string): string {
 
-    return (/*html*/
-        `
+  return (/*html*/
+    `
 			<!DOCTYPE html>
 			<html lang="en">
 				<head>
@@ -268,13 +268,13 @@ export function getDockerfileHTML(webviewUri: Uri, styleUri: Uri, nonce: string)
 				</body>
 			</html>
 			`
-    );
+  );
 
 }
 
-export function getDockerComposeHTML(webviewUri: Uri, styleUri: Uri, nonce: string): string { 
+export function getDockerComposeHTML(webviewUri: Uri, styleUri: Uri, nonce: string): string {
   return (/*html*/
-  `
+    `
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -290,14 +290,10 @@ export function getDockerComposeHTML(webviewUri: Uri, styleUri: Uri, nonce: stri
     <a href="#1">Mounting and volumes</a><br>
     <a href="#2">Secrets and configs</a><br>
     <a href="#3">Compose specifications and Control groups</a><br>
-    <a href="#4">Exposing ports</a><br>
-    <a href="#5">Security aspects of multi-stage builds and production mode</a><br>
-    <a href="#6">Healthcheck for container</a><br>
-    <h2>Intrinsic security of containers</h2>
-    <a href="#7">Kernel namespaces</a><br>
-    <a href="#9">Linux Kernel Capabilities</a>
+    <a href="#4">User and user privileges</a><br>
+    <a href="#5">Linux capabilites</a><br>
+    <a href="#6">Healthcheck for container</a>
     <br>
-    <h1>Security aspects for images</h1>
     <h2 id="1">Mounting and volumes</h2>
     <section>
       <div>
@@ -323,7 +319,6 @@ export function getDockerComposeHTML(webviewUri: Uri, styleUri: Uri, nonce: stri
         <vscode-button id="question1_dc_submit">Submit answer</vscode-button>
       </section>
     </section>
-    
     <section>
     <h2 id="2">Secrets and configs</h2>
     <div>
@@ -357,42 +352,53 @@ export function getDockerComposeHTML(webviewUri: Uri, styleUri: Uri, nonce: stri
     More information for deployment specifications and control groups</a>
     </div>
     </section>
-    <h2 id="4">Exposing ports</h2>
+    <h2 id="4">User and user privileges</h2>
+    <section>
+    <p>
+    Defining users in a docker-compose file is similar to the Dockerfile. You can either use the default users or create your own. 
+    Yet again you can restrict the user to only access certain files or directories and it is recommended to use a non-root user.
+    Setting the user by username or by UID to the one declared in the base image is required for the user to be usable in the container.
+    More information can be found in the Dockerfile Catalogue.
+    <p>
+    <b>User example</b>
+    <pre>
+    services:
+     myservice:
+      user: awsec-node  // Username
+      user: 1234 // UID
+    </pre>
+    </p>
+    <section class="component-row">
+     <h4>2. What is correct for users in a dockerfile and in a compose file</h4>
+     <vscode-checkbox id="2_1_dc_checkbox">When you declare a user in a dockerfile it is on the host and within the container</vscode-checkbox><br>
+     <vscode-checkbox id="2_2_dc_checkbox">By declaring the user it is only within the container, not related to a host user</vscode-checkbox><br>
+     <vscode-checkbox id="2_3_dc_checkbox">A user declared only in a compose file is created when the compose file is executed</vscode-checkbox><br>
+     <vscode-button id="question2_dc_submit">Submit answer</vscode-button> 
+    </section>
+    </section>
+    <h2 id="5">Linux capabilites</h2>
     <section>
       <p>
-        Exposing ports in normally only a problem if your container image itself is poorly configured which leads to potential vulnerabilites.
-        Although you need to make sure that you only open ports that need to be accessed. If containers need to communicate with each other,
-        it may be better to build a network for them. The default bridge network links every container on the host with each other by opening a port,
-        which may not be your intention. 
-        <p>
-          <a href="https://docs.docker.com/network/network-tutorial-standalone/#use-user-defined-bridge-networks">
-          More information to create your own bridge network</a>
-        </p>
-      </p>
-    </section>
-    <h2 id="5">Security aspects of multi-stage builds and production mode</h2>
-    <section>
-      <p>
-        Multi-stage builds are a good way to increase performance when building your image and also minimize the attack vectors for your image.
-        By using multiple stages you can use the cache management effectively and your stages can also, if possible, be executed in parallel. 
-        As an example, the final stage, which could represent the production image, can install only the relevant production dependencies to run
-        your application and filter many vulnerabilites which come along with a large amount of development dependencies.
+        You can set the capabilites for your container in the compose file. It is recommended to only use the needed ones and start by dropping all of them.
+        On top of that you can again use no-new-privilege with the security_opt attribute to prevent privilege escalation.
+        More information can be found in the Dockerfile Catalogue. 
       </p>
       <p>
-        <a href="https://docs.docker.com/develop/security-best-practices/#use-multi-stage-builds">
-        More security-wise information</a>
+      <b>Capabilities example</b>
+      <pre>
+      services:
+       myservice:
+        cap_add:
+          - CAPABILITIES
+        cap_drop:
+          - CAPABILITIES
+        security_opt:
+          - no-new-privileges:true
+      </pre>
       </p>
       <p>
-        <a href="https://docs.docker.com/build/building/multi-stage/">How to configure multi-stage builds</a>
+        <a href="https://docs.docker.com/compose/compose-file/compose-file-v3/#cap_add-cap_drop">Capability usage</a>
       </p>
-      <section class="component-row">
-        <h4>4. What is correct when it comes to security aspects of multi-stage builds</h4>
-        <vscode-checkbox id="4_1_checkbox">Minimizing the attack vectors by filtering production irrelevant dev dependencies</vscode-checkbox><br>
-        <vscode-checkbox id="4_2_checkbox">By using the cache management arbitrary code can get cached</vscode-checkbox><br>
-        <vscode-checkbox id="4_3_checkbox">Performance increase when building and a final production image</vscode-checkbox><br>
-        <vscode-button id="question4_submit">Submit answer</vscode-button>
-      </section>
-    </section>
     </section>
     <h2 id="6">Healthcheck for container</h2>
     <section>
@@ -408,68 +414,39 @@ export function getDockerComposeHTML(webviewUri: Uri, styleUri: Uri, nonce: stri
       Use a healthcheck</a>
     </p>
     <p>
-      <b>Healthcheck</b>
-      <br>
-      | HEALTHCHECK --interval=5m --timeout=3s \
-        CMD curl -f http://localhost/ || exit 1
+      <a href="https://docs.docker.com/compose/compose-file/compose-file-v3/#healthcheck">
+      Use a healthcheck in compose</a>
+    </p>
+    <p>
+    <b>Healthcheck example</b>
+    <br>
+    <pre>
+    services:
+     myservice:
+      healthcheck:
+        check: ["CMD", "curl", "-f", "http://localhost/", "||", "exit", "1"] 
+        interval: 5m
+        timeout: 3s
+        retries: 3
+        start_period: 10s 
+    </pre>
     </p>
       <section class="component-row">
-          <h4>5. What is correct for healthckecks?</h4>
-          <vscode-checkbox id="5_1_checkbox">With healthchecks you can have many side benefits if you implement them, e.g. taking actions when certain conditions occurs</vscode-checkbox><br>
-          <vscode-checkbox id="5_2_checkbox">If the health status of a container is unhealthy it is getting restarted automatically</vscode-checkbox><br>
-          <vscode-checkbox id="5_3_checkbox">There are four conditions for healthckecks</vscode-checkbox><br>
-          <vscode-button id="question5_submit">Submit answer</vscode-button>
-        </section>
+          <h4>3. What is correct for healthckecks?</h4>
+          <vscode-checkbox id="3_1_dc_checkbox">With healthchecks you can have many side benefits if you implement them, e.g. taking actions when certain conditions occurs</vscode-checkbox><br>
+          <vscode-checkbox id="3_2_dc_checkbox">If the health status of a container is unhealthy it is getting restarted automatically</vscode-checkbox><br>
+          <vscode-checkbox id="3_3_dc_checkbox">There are four conditions for healthckecks</vscode-checkbox><br>
+          <vscode-button id="question3_dc_submit">Submit answer</vscode-button>
       </section>
-    <br><h1>Intrinsic security of containers</h1><br>
-    <h2 id="7">Kernel namespaces and user namespaces</h2>
-    <section>
-      <p>
-        Linux namespaces are security relevant, because they limit the scope of what a container can observe.
-        That includes <a href="https://www.redhat.com/sysadmin/7-linux-namespaces#:~:text=Linux%20containers&text=There%20are%20seven%20common%20types,each%20namespace%20works%20by%20example.">
-        seven namespace types</a>.
-        With these namespaces processes in a container belong to this single container and cannot affect others or even the host system. 
-        Isolating container by user namespaces is an option if your process needs to be run as root within the container.
-        You can map the root UID in the container to a range of less-priviledged UID on the host, so you fix the potential of a
-        privilege escalation vulnerability breach from container to host. Now your process is running as UID 0 (root) within the container, 
-        but on the host its mapped to a normal user in your specified range.
-      </p>
-      <p>
-        <a href="https://docs.docker.com/engine/security/userns-remap/#isolate-containers-with-a-user-namespace">
-        Using user namespaces</a>
-      </p>
-      <p>
-        <a href="https://www.linux.com/news/understanding-and-securing-linux-namespaces/">
-        Understanding and Securing Linux Namespaces</a>
-      </p>
     </section>
-    <h2 id="9">Linux Kernel Capabilities and Seccomp security</h2>
-    <section>
-      <p>
-        Docker manages an allowlist for cabalities and these can be found <a href="https://github.com/moby/moby/blob/master/oci/caps/defaults.go#L6-L19">here</a>.
-        You can remove or add cabalities, but every new added capabilites makes Docker less secure. Therefore it is recommended to only use the needed ones for processes.
-        Seccomp is also an allowlist of system calls and the default can be found <a href="https://github.com/moby/moby/blob/master/profiles/seccomp/default.json">here</a>. It is already least privilege
-        so changing the profile is not recommended.
-        It is also recommended to use the <b>no-new-priviledges</b> flag in order to prevent escalate privileges using setuid or setgid binaries.
-      </p>
-      <p>
-        <b>Add or drop capabilites</b>
-        <br>
-        | --cap-add CAPABILITIES
-        <br>
-        | --cap-drop CAPABILITIES
-      </p>
-      <p>
-        <a href="https://docs.docker.com/engine/security/seccomp/#significant-syscalls-blocked-by-the-default-profile">More information</a>
-      </p>
-    </section>
+    <br>
     <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
   </body>
 </html>
 `
-);
+  );
 }
 
-export function getDockerSwarmHTML(webviewUri: Uri, styleUri: Uri, nonce: string): string { 
-    return(``);
+export function getDockerSwarmHTML(webviewUri: Uri, styleUri: Uri, nonce: string): string {
+  return (``);
 }

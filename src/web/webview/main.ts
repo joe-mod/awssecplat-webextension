@@ -26,7 +26,9 @@ const catalogCheckboxes = {
   "question5_submit": ["5_1_checkbox", "5_2_checkbox", "5_3_checkbox",],
   "question6_submit": ["6_1_checkbox", "6_2_checkbox", "6_3_checkbox",],
   //Compose buttons
-  "question1_dc_submit": ["1_1_dc_checkbox", "1_2_dc_checkbox", "1_3_dc_checkbox",],
+  "question1_dc_submit": ["1_1_dc_checkbox", "1_2_dc_checkbox", "1_3_dc_checkbox"],
+  "question2_dc_submit": ["2_1_dc_checkbox", "2_2_dc_checkbox", "2_3_dc_checkbox"],
+  "question3_dc_submit": ["3_1_dc_checkbox", "3_2_dc_checkbox", "3_3_dc_checkbox"],
 };
 
 const correctQuestionsCheckboxes = {
@@ -38,7 +40,9 @@ const correctQuestionsCheckboxes = {
   "question5_submit": ["5_1_checkbox"],
   "question6_submit": ["6_3_checkbox"],
   //Compose buttons
-  "question1_dc_submit": ["1_1_dc_checkbox", "1_2_dc_checkbox", "1_3_dc_checkbox",],
+  "question1_dc_submit": ["1_1_dc_checkbox", "1_2_dc_checkbox"],
+  "question2_dc_submit": ["2_2_dc_checkbox"],
+  "question3_dc_submit": ["3_1_dc_checkbox"],
 };
 
 

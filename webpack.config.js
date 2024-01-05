@@ -82,11 +82,10 @@ const webviewConfig = {
 	  libraryTarget: "module",
 	  chunkFormat: "module",
 	},
-	//TODO: nochmal anschauen, warum nicht kopiert wird
 	plugins: [
 		new copyPlugin({ // copying css to be part of the build
 			patterns: [
-				{ from: "./web/webview/*.css", to: "./dist/web", context: 'src',},
+				"src/web/webview/*.css"
 			]
 		})
 	]
@@ -154,7 +153,7 @@ const browserServerConfig = {
 	},
 	resolve: {
 		mainFields: ['module', 'main'],
-		extensions: ['.ts', '.js'], // support ts-files and js-files
+		extensions: ['.ts', '.js', '.json'], // support ts-files and js-files and json files for the 
 		alias: {},
 		fallback: {
 			//path: require.resolve("path-browserify")

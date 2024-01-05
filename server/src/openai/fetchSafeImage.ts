@@ -1,4 +1,35 @@
 //import 'dotenv/config';
+import mockedDistributions from './images.json';
+
+export const officialImages: string[] = [
+    "alpine",
+    "nginx",
+    "busybox",
+    "ubuntu",
+    "python",
+    "redis",
+    "postgres",
+    "memcached",
+    "node",
+    "httpd",
+    "mongo",
+    "mysql",
+    "traefik",
+    "rabbitmq",
+    "docker",
+    "mariadb",
+    "hello-world",
+    "openjdk",
+    "golang",
+    "registry",
+    "wordpress",
+    "debian",
+    "centos",
+    "php",
+    "consul"
+    // ... more images
+];
+
 export function getSafestDistribution(baseImage: string): string {
     // if (!!(process.env.OPENAI_API_KEY)) {
     //     //api stuff
@@ -21,4 +52,20 @@ export function getSafestDistribution(baseImage: string): string {
     const distributionBaseImage = readJsonByKey(baseImage);
 
     return distributionBaseImage;
+}
+
+function readJsonByKey(baseImage: string): string {
+
+    try {
+
+        const data: { [key: string]: string } = mockedDistributions;
+
+        console.log(data);
+        
+        return data[baseImage];
+        
+    } catch (error) {
+        console.error("Error reading json file:", error);
+        return "<Error>";
+    }
 }

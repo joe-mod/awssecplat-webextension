@@ -1,5 +1,6 @@
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { BrowserMessageReader, BrowserMessageWriter, CompletionItem, CompletionItemKind, Diagnostic, DiagnosticSeverity, InitializeParams, InitializeResult, TextDocumentPositionParams, TextDocumentSyncKind, TextDocuments, createConnection } from "vscode-languageserver/browser";
+import { getSafestDistribution, officialImages } from "./openai/fetchSafeImage";
 
 
 
@@ -13,34 +14,34 @@ const messageWriter = new BrowserMessageWriter(self as unknown as DedicatedWorke
 
 const connection = createConnection(messageReader, messageWriter);
 
-const dockerOfficialImageList: string[] = [
-    "alpine",
-    "nginx",
-    "busybox",
-    "ubuntu",
-    "python",
-    "redis",
-    "postgres",
-    "memcached",
-    "node",
-    "httpd",
-    "mongo",
-    "mysql",
-    "traefik",
-    "rabbitmq",
-    "docker",
-    "mariadb",
-    "hello-world",
-    "openjdk",
-    "golang",
-    "registry",
-    "wordpress",
-    "debian",
-    "centos",
-    "php",
-    "consul"
-    // ... more images
-];
+// const dockerOfficialImageList: string[] = [
+//     "alpine",
+//     "nginx",
+//     "busybox",
+//     "ubuntu",
+//     "python",
+//     "redis",
+//     "postgres",
+//     "memcached",
+//     "node",
+//     "httpd",
+//     "mongo",
+//     "mysql",
+//     "traefik",
+//     "rabbitmq",
+//     "docker",
+//     "mariadb",
+//     "hello-world",
+//     "openjdk",
+//     "golang",
+//     "registry",
+//     "wordpress",
+//     "debian",
+//     "centos",
+//     "php",
+//     "consul"
+//     // ... more images
+// ];
 
 /* from here on, all code is non-browser specific and could be shared with a regular extension */
 
@@ -70,6 +71,7 @@ documents.onDidChangeContent((changeEvent) => {
 
 function validateTextDocumentInstructions(document: TextDocument) {
     const diagnostics: Diagnostic[] = [];
+    const dockerOfficialImageList: string[] = officialImages;
     const lines = document.getText().split('\n');
 
     console.log(lines);
@@ -116,6 +118,12 @@ function validateTextDocumentInstructions(document: TextDocument) {
         if ((match = regexPattern.exec(line))) {
 
             let baseImage: string = match[1];
+            /**
+			 * TODO: API handling for safe image; when API key not set; fetch from local file; update local file with AI data
+			 * problems: api key needs to be set, 
+			 */
+			let safeImage: string = getSafestDistribution(baseImage);
+            
             if (dockerOfficialImageList.includes(baseImage)) {
                 diagnostics.push({
                     severity: DiagnosticSeverity.Information, // 3: Information, 
@@ -124,7 +132,7 @@ function validateTextDocumentInstructions(document: TextDocument) {
                         end: { line: i, character: (line.indexOf(match[1]) + match[0].indexOf(baseImage)) }
                     },
                     // Markdown not supported for Diagnostics
-                    message: [`the safest distribution and version for **${baseImage}** is: test`,
+                    message: [`the safest distribution and version for **${baseImage}** is: **${safeImage}**`,
                     ].join("\n"),
 
                     source: 'docker-compose-linter'

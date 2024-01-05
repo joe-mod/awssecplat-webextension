@@ -8,12 +8,15 @@
 		],
 		"module": "commonjs",
 		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
 		"sourceMap": true,
 		"strict": true,
 		"composite": true,
 	},
 	"include": [
-		"src"
+		"src/**/*",
+		"src/**/*.json"
 	],
 	"exclude": [
 		"node_modules",

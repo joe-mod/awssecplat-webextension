@@ -26,8 +26,16 @@
         "title": "Select mode"
       },
       {
-        "command": "dockerScriptView.selectContainerID",
-        "title": "Select container"
+        "command": "dockerScriptView.listContainers",
+        "title": "List containers"
+      },
+      {
+        "command": "dockerScriptView.scanContainer",
+        "title": "Scan"
+      },
+      {
+        "command": "dockerScriptView.dropContainer",
+        "title": "Drop"
       }
     ],
     "viewsContainers": {
@@ -59,9 +67,19 @@
           "group": "inline"
         },
         {
-          "command": "dockerScriptView.selectContainerID",
-          "when": "view == dockerScriptView",
+          "command": "dockerScriptView.listContainers",
+          "when": "view == dockerScriptView && viewItem == dockerScriptViewItem",
           "group": "inline"
+        },
+        {
+          "command": "dockerScriptView.scanContainer",
+          "when": "view == dockerScriptView && viewItem == containerItem",
+          "group": "inline@1"
+        },
+        {
+          "command": "dockerScriptView.dropContainer",
+          "when": "view == dockerScriptView && viewItem == containerItem",
+          "group": "inline@2"
         }
       ]
     },

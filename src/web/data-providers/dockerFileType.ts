@@ -20,7 +20,7 @@ export class DockerFileTypeProvider implements vscode.TreeDataProvider<DockerNod
 
         const dockerFileTypeSelectionIcon = vscode.Uri.file("resources/edit.svg");
 
-        vscode.window.showInformationMessage("You can now select your desired Docker mode");
+        //vscode.window.showInformationMessage("You can now select your desired Docker mode");
 
         return [
             new DockerNode("Dockerfile", dockerFileTypeSelectionIcon),

@@ -1,4 +1,9 @@
-export function getContainerNames(userInput: string): string[] {
+/**
+ * A helper function to filter out both container and image names 
+ * @param userInput which is the output of the docker commands
+ * @returns the filtered list of items
+ */
+export function getDockerItemNames(userInput: string): string[] {
     const lines = userInput.split(';');
     const containerList: string[] = [];
 

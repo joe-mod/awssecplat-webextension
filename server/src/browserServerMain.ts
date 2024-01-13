@@ -12,40 +12,11 @@ console.log('running server awssecplat-webextension in mode Dockerfile');
 
 /* browser specific setup code */
 
-//TODO? Type insertion, because self functions correctly but throws error when building
+//Type insertion, because self functions correctly but throws error when building
 const messageReader = new BrowserMessageReader(self as unknown as DedicatedWorkerGlobalScope);
 const messageWriter = new BrowserMessageWriter(self as unknown as DedicatedWorkerGlobalScope);
 
 const connection = createConnection(messageReader, messageWriter);
-
-// const dockerOfficialImageList: string[] = [
-//     "alpine",
-//     "nginx",
-//     "busybox",
-//     "ubuntu",
-//     "python",
-//     "redis",
-//     "postgres",
-//     "memcached",
-//     "node",
-//     "httpd",
-//     "mongo",
-//     "mysql",
-//     "traefik",
-//     "rabbitmq",
-//     "docker",
-//     "mariadb",
-//     "hello-world",
-//     "openjdk",
-//     "golang",
-//     "registry",
-//     "wordpress",
-//     "debian",
-//     "centos",
-//     "php",
-//     "consul"
-//     // ... more images
-// ];
 
 /* from here on, all code is non-browser specific and could be shared with a regular extension */
 
@@ -122,11 +93,10 @@ function validateTextDocumentInstructions(document: TextDocument) {
             let baseImage: string = match[1];
 
 			/**
-			 * TODO: API handling for safe image; when API key not set; fetch from local file; update local file with AI data
+			 * AI Feature: API handling for safe image; when API key not set; fetch from local file; update local file with AI data
 			 * problems: api key needs to be set, 
 			 */
 			let safeImage: string = getSafestDistribution(baseImage);
-			//let safeImage = "test";
 
             if (dockerOfficialImageList.includes(baseImage)) {
                 diagnostics.push({

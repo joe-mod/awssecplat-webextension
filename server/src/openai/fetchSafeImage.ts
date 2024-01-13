@@ -1,4 +1,3 @@
-//import 'dotenv/config';
 import mockedDistributions from './images.json';
 
 export const officialImages: string[] = [

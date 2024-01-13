@@ -5,7 +5,7 @@ import { DockerFileTypeProvider } from "./data-providers/dockerFileType";
 import { LanguageServices } from '../../client/src/browserClientMain';
 import { DockerModePanel } from './panels/DockerModePanel';
 import { DockerScriptViewProvider } from './data-providers/dockerScriptView';
-import { getContainerNames } from './utilities/containerScan';
+import { getDockerItemNames } from './utilities/containerScan';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -18,8 +18,12 @@ export function activate(context: vscode.ExtensionContext) {
 	// Handler to start the Language Client 
 	const langHandler = new LanguageServices();
 
+	// the label of the selected Docker Mode
 	let dockerNodeLabel: string = "[Mode not selected]";
 
+	/**
+	 * Register the TreeDataProvider for both the docker modes and the scanning scripts
+	 */
 	vscode.window.registerTreeDataProvider('dockerContainer', dockerFileTypeProvider);
 
 	vscode.window.registerTreeDataProvider('dockerScriptView', dockerScriptViewProvider);
@@ -31,11 +35,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// !Only gets registered when the select button is pressed, so everything depending on the docker Mode needs to be executed here!
 	const showDockerSelection = vscode.commands.registerCommand("dockerContainer.selectContainer", (dockerNode) => {
 		vscode.window.showInformationMessage((`You have selected ${dockerNode.label} as your desired Docker mode`));
-		//vscode.commands.executeCommand((`dockerContainer.selectContainer.catalog.${dockerNode.label}`));
+
 		dockerNodeLabel = dockerNode.label;
 
 		// Open the webview for the selected Docker Mode
-		// TODO
 		switch (dockerNodeLabel) {
 			case "Dockerfile":
 				DockerModePanel.render(context.extensionUri, dockerNodeLabel);
@@ -48,11 +51,6 @@ export function activate(context: vscode.ExtensionContext) {
 				break;
 		}
 		vscode.window.showInformationMessage("Catalog for your " + dockerNodeLabel);
-
-		// TODO: Store the dockerNodeLabel in the extensionContext
-		context.workspaceState.update('dockerNodeLabel', dockerNodeLabel);
-		console.log("label with context in register command: " + context.workspaceState.get('dockerNodeLabel'));
-		console.log("label in register command: " + dockerNodeLabel);
 
 		//start client, when docker type selected
 		langHandler.activateClient(context, dockerNodeLabel);
@@ -73,7 +71,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// regex to match <container id>:<container name>
 		const regexContainer = /^[a-fA-F0-9]{12}:[a-zA-Z0-9_.-]+$/;
-		//const regextest = /[a-zA-Z0-9]*/i;
 
 		vscode.window.showInputBox({
 			prompt: 'Enter the \'docker ps\' output in the commandline',
@@ -90,11 +87,10 @@ export function activate(context: vscode.ExtensionContext) {
 			ignoreFocusOut: true
 		}).then(userInput => {
 			if (userInput) {
-				containerList = getContainerNames(userInput);
+				containerList = getDockerItemNames(userInput);
 
 				dockerScriptViewProvider.refresh(containerList);
 			}
-			console.log("User input: " + userInput);
 		});
 
 	});
@@ -128,7 +124,7 @@ export function activate(context: vscode.ExtensionContext) {
         // Drops the container with for the given containerName
 		dockerScriptViewProvider.dropContainer(containerName.label);
     });
-	
+
 
 	context.subscriptions.push(showDockerSelection, showDockerScriptView, scanCommand, dropContainerCommand);
 

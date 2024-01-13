@@ -16,7 +16,12 @@ export class LanguageServices {
 
 	constructor() {}
 
-	// this method is called when vs code is activated
+	/**
+	 * Activation function for the language client to start the language server
+	 * @param context is the extension context of the extension and all its resources
+	 * @param dockerMode is the mode the user has selected
+	 * @returns 
+	 */
 	activateClient(context: vscode.ExtensionContext, dockerMode: string): LanguageClient {
 	
 		console.log('lsp-web-extension activated!');
@@ -83,6 +88,7 @@ export class LanguageServices {
 						 undefined;
 
 		const serverMain = vscode.Uri.joinPath(context.extensionUri, `server/dist/${serverFile}`);
+		// new worker gets created, which is a webworker in the web extension context
 		const worker = new Worker(serverMain.toString(true));
 		
 		this.languageClient = new LanguageClient('awssecplat-webextension', 'LSP Web Extension AWSSECPLAT', clientOptions, worker);

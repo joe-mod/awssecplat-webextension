@@ -1,5 +1,4 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
-//import { dockerNodeLabel } from '../extension';
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { getDockerComposeHTML, getDockerSwarmHTML, getDockerfileHTML } from "../utilities/getDockerFileTypeHTML";
@@ -10,6 +9,7 @@ import { getDockerComposeHTML, getDockerSwarmHTML, getDockerfileHTML } from "../
  */
 export class DockerModePanel {
 
+  // the currently active panel
   public static currentPanel: { [key: string]: DockerModePanel | undefined } = {};
   private readonly _panel: WebviewPanel;
   private _disposables: Disposable[] = [];
@@ -45,7 +45,7 @@ export class DockerModePanel {
         {
           // Enable JavaScript in the webview
           enableScripts: true,
-          // Restrict the webview to only load resources from the `out` directory
+          // Restrict the webview to only load resources from the `dist/web` directory
           localResourceRoots: [Uri.joinPath(extensionUri, "dist/web")],
         }
       );
@@ -58,7 +58,6 @@ export class DockerModePanel {
 
     const webviewUri = getUri(webview, extensionUri, ["dist/web", "webview.js"]);
     const styleUri = getUri(webview, extensionUri, ["dist/web", "style.css"]);
-    console.log("WebviewUri: " + webviewUri);
     // Randomly created nonce so script get only executed in the webview context
     const nonce = getNonce();
 
@@ -88,8 +87,6 @@ export class DockerModePanel {
     }
 
     this._panel.dispose();
-    console.log("Panel got closed");
-    //context.subscriptions
   }
 
   private _setWebViewMessageListener(webview: Webview) {

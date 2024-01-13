@@ -1,15 +1,19 @@
 import * as vscode from 'vscode';
 
 
+/**
+ * Tree view item for the dockerScriptView and its expandables
+ */
 class DockerScriptViewItem extends vscode.TreeItem {
-    constructor(public readonly label: string) { 
+    constructor(public readonly label: string, public readonly contextValue: string) {
         super(label, vscode.TreeItemCollapsibleState.Expanded);
-        this.contextValue = 'dockerScriptViewItem';
+        // the contextValue can be a container or image item
+        this.contextValue = contextValue;
     }
 }
 
 class ContainerItem extends vscode.TreeItem {
-    constructor(public readonly label: string, public readonly command?: vscode.Command) { 
+    constructor(public readonly label: string, public readonly command?: vscode.Command) {
         super(label);
         this.contextValue = 'containerItem';
     }
@@ -17,16 +21,19 @@ class ContainerItem extends vscode.TreeItem {
 
 export class DockerScriptViewProvider implements vscode.TreeDataProvider<DockerScriptViewItem | ContainerItem> {
 
+    // Change events which get fired when the tree data changes
     private _onDidChangeTreeData = new vscode.EventEmitter<DockerScriptViewItem | ContainerItem | undefined>();
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+    //Lists for the two item expandables
     private containers: ContainerItem[] = [];
 
     refresh(containerList: string[]) {
         this.containers = containerList.map(containerName => new ContainerItem(containerName, {
             command: 'dockerScriptView.scanContainer',
             arguments: [containerName],
-            title: 'Scan',
-        }));
+                title: 'Scan',
+            }));
         this._onDidChangeTreeData.fire(undefined);
     }
 
@@ -49,7 +56,7 @@ export class DockerScriptViewProvider implements vscode.TreeDataProvider<DockerS
                 new DockerScriptViewItem("Container scan")
             ];
         } else if (element instanceof DockerScriptViewItem && element.label === "Container scan") {
-            return this.containers;
+                return this.containers;
         }
         return [];
     }

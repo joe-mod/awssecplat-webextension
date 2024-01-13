@@ -47,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 				DockerModePanel.render(context.extensionUri, dockerNodeLabel);
 				break;
 			case "Docker_Swarm":
-				//DockerSwarmPanel.render(context.extensionUri, dockerNodeLabel);
+				DockerModePanel.render(context.extensionUri, dockerNodeLabel);
 				break;
 		}
 		vscode.window.showInformationMessage("Catalog for your " + dockerNodeLabel);
@@ -57,7 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	});
 
-	const showDockerScriptView = vscode.commands.registerCommand('dockerScriptView.listContainers', (containerList) => {
+	const showDockerScriptViewContainer = vscode.commands.registerCommand('dockerScriptView.listContainers', (containerList) => {
 		
 		vscode.window.showWarningMessage((`Please make sure that docker is running`));
 
@@ -89,13 +89,13 @@ export function activate(context: vscode.ExtensionContext) {
 			if (userInput) {
 				containerList = getDockerItemNames(userInput);
 
-				dockerScriptViewProvider.refresh(containerList);
+				dockerScriptViewProvider.refresh(containerList, "container");
 			}
 		});
 
 	});
 
-	const scanCommand = vscode.commands.registerCommand('dockerScriptView.scanContainer', (containerName) => {
+	const scanContainerCommand = vscode.commands.registerCommand('dockerScriptView.scanContainer', (containerName) => {
 
 		console.log(`Scanning container: ${containerName.label}`);
 		const command =
@@ -125,8 +125,63 @@ export function activate(context: vscode.ExtensionContext) {
 		dockerScriptViewProvider.dropContainer(containerName.label);
     });
 
+	const showDockerScriptViewImage = vscode.commands.registerCommand('dockerScriptView.listImages', (imageList) => {
+		
+		vscode.window.showWarningMessage((`Please make sure that docker is running`));
 
-	context.subscriptions.push(showDockerSelection, showDockerScriptView, scanCommand, dropContainerCommand);
+		try {
+			const terminal = vscode.window.activeTerminal || vscode.window.createTerminal({ name: 'Docker Script View commandline' });
+			terminal.show();
+			terminal.sendText('docker images --format "{{.ID}}:{{.Repository}};"'); 
+		} catch (error) {
+			vscode.window.showInformationMessage((`Please open a terminal`));
+		}
+
+		// regex to match <image id>:<image name>
+		const regexImage = /^[a-fA-F0-9]{12}:[a-zA-Z0-9_./-]+$/;
+
+		vscode.window.showInputBox({
+			prompt: 'Enter the \'docker images\' output in the commandline',
+			placeHolder: '<image id>:<image name>',
+			validateInput: text => {
+				const lines = text.split(';');
+				for (const line of lines) {
+					if (line && !regexImage.test(line.trim())) {
+						return 'One or more lines have an invalid format';
+					}
+				}
+				return null; // Return null if all lines are valid
+			},
+			ignoreFocusOut: true
+		}).then(userInput => {
+			if (userInput) {
+				imageList = getDockerItemNames(userInput);
+
+				dockerScriptViewProvider.refresh(imageList, "image");
+			}
+		});
+
+	});
+
+	const scanImageCommand = vscode.commands.registerCommand('dockerScriptView.scanImage', (imageName) => {
+
+		try {
+			const terminal = vscode.window.activeTerminal || vscode.window.createTerminal({ name: 'Docker Script View commandline' });
+			terminal.show();
+			terminal.sendText(`docker scout cves ${imageName.label}`, true);
+		} catch (error) {
+			vscode.window.showInformationMessage((`Please open a terminal`));
+		}
+
+	});
+
+	const dropImageCommand = vscode.commands.registerCommand('dockerScriptView.dropImage', (imageName) => {
+        // Drops the image with for the given imageName
+		dockerScriptViewProvider.dropImage(imageName.label);
+    });
+	
+
+	context.subscriptions.push(showDockerSelection, showDockerScriptViewContainer, scanContainerCommand, dropContainerCommand, showDockerScriptViewImage, scanImageCommand, dropImageCommand);
 
 }
 

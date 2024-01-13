@@ -36,6 +36,18 @@
       {
         "command": "dockerScriptView.dropContainer",
         "title": "Drop"
+      },
+      {
+        "command": "dockerScriptView.listImages",
+        "title": "List images"
+      },
+      {
+        "command": "dockerScriptView.scanImage",
+        "title": "Scan"
+      },
+      {
+        "command": "dockerScriptView.dropImage",
+        "title": "Drop"
       }
     ],
     "viewsContainers": {
@@ -68,7 +80,7 @@
         },
         {
           "command": "dockerScriptView.listContainers",
-          "when": "view == dockerScriptView && viewItem == dockerScriptViewItem",
+          "when": "view == dockerScriptView && viewItem == containerViewItem",
           "group": "inline"
         },
         {
@@ -79,6 +91,21 @@
         {
           "command": "dockerScriptView.dropContainer",
           "when": "view == dockerScriptView && viewItem == containerItem",
+          "group": "inline@2"
+        },
+        {
+          "command": "dockerScriptView.listImages",
+          "when": "view == dockerScriptView && viewItem == imageViewItem",
+          "group": "inline"
+        },
+        {
+          "command": "dockerScriptView.scanImage",
+          "when": "view == dockerScriptView && viewItem == imageItem",
+          "group": "inline@1"
+        },
+        {
+          "command": "dockerScriptView.dropImage",
+          "when": "view == dockerScriptView && viewItem == imageItem",
           "group": "inline@2"
         }
       ]

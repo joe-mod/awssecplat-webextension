@@ -1,5 +1,12 @@
 import * as vscode from 'vscode';
 
+/**
+ * Settings for the tree view items so the tree can be expanded
+ */
+interface ItemSettings {
+    command: string;
+    title: string;
+}
 
 /**
  * Tree view item for the dockerScriptView and its expandables
@@ -19,21 +26,43 @@ class ContainerItem extends vscode.TreeItem {
     }
 }
 
-export class DockerScriptViewProvider implements vscode.TreeDataProvider<DockerScriptViewItem | ContainerItem> {
+class ImageItem extends vscode.TreeItem {
+    constructor(public readonly label: string, public readonly command?: vscode.Command) {
+        super(label);
+        this.contextValue = 'imageItem';
+    }
+}
+
+export class DockerScriptViewProvider implements vscode.TreeDataProvider<DockerScriptViewItem | ContainerItem | ImageItem> {
 
     // Change events which get fired when the tree data changes
-    private _onDidChangeTreeData = new vscode.EventEmitter<DockerScriptViewItem | ContainerItem | undefined>();
+    private _onDidChangeTreeData = new vscode.EventEmitter<DockerScriptViewItem | ContainerItem | ImageItem | undefined>();
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     //Lists for the two item expandables
     private containers: ContainerItem[] = [];
+    private images: ImageItem[] = [];
 
-    refresh(containerList: string[]) {
-        this.containers = containerList.map(containerName => new ContainerItem(containerName, {
-            command: 'dockerScriptView.scanContainer',
-            arguments: [containerName],
+    private readonly itemSettings: { [key: string]: ItemSettings } = {
+        "container": { command: "dockerScriptView.scanContainer", title: "Scan" },
+        "image": { command: "dockerScriptView.scanImage", title: "Scan" },
+    };
+
+    refresh(items: string[], itemType: string) {
+
+        if (itemType === "container") {
+            this.containers = items.map(itemName => new ContainerItem(itemName, {
+                command: this.itemSettings[itemType].command,
+                arguments: [itemName],
                 title: 'Scan',
             }));
+        } else if (itemType === "image") {
+            this.images = items.map(itemName => new ImageItem(itemName, {
+                command: this.itemSettings[itemType].command,
+                arguments: [itemName],
+                title: 'Scan',
+            }));
+        }
         this._onDidChangeTreeData.fire(undefined);
     }
 
@@ -41,22 +70,30 @@ export class DockerScriptViewProvider implements vscode.TreeDataProvider<DockerS
         this.containers = this.containers.filter(container => container.label !== containerName);
         this._onDidChangeTreeData.fire(undefined);
     }
-    //onDidChangeTreeData?: vscode.Event<void | DockerNode | DockerNode[] | null | undefined> | undefined;
 
-    getTreeItem(element: DockerScriptViewItem | ContainerItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+    dropImage(imageName: string) {
+        this.images = this.images.filter(image => image.label !== imageName);
+        this._onDidChangeTreeData.fire(undefined);
+    }
+
+    getTreeItem(element: DockerScriptViewItem | ContainerItem | ImageItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
 
         return element;
     }
-    getChildren(element?: DockerScriptViewItem | ContainerItem): vscode.ProviderResult<DockerScriptViewItem[]> {
-
-        //vscode.window.showInformationMessage("You can now list all containers. Once done, you can scan a single container by selecting it");
+    getChildren(element?: DockerScriptViewItem | ContainerItem | ImageItem): vscode.ProviderResult<DockerScriptViewItem[] | ContainerItem[] | ImageItem[]> {
 
         if (!element) {
             return [
-                new DockerScriptViewItem("Container scan")
+                new DockerScriptViewItem("Container scan", "containerViewItem"),
+                new DockerScriptViewItem("Image scan", "imageViewItem")
             ];
-        } else if (element instanceof DockerScriptViewItem && element.label === "Container scan") {
+        } else if (element instanceof DockerScriptViewItem) {
+            if (element.label === "Container scan") {
                 return this.containers;
+            }
+            else if (element.label === "Image scan") {
+                return this.images;
+            }
         }
         return [];
     }

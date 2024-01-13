@@ -448,5 +448,139 @@ export function getDockerComposeHTML(webviewUri: Uri, styleUri: Uri, nonce: stri
 }
 
 export function getDockerSwarmHTML(webviewUri: Uri, styleUri: Uri, nonce: string): string {
-  return (``);
+  return (
+    /*html*/`
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-${nonce}';">
+    <link rel="stylesheet" href="${styleUri}">
+    <title>Catalog</title>
+  </head>
+  <body>
+    <h1>Docker Swarm Catalog</h1><br>
+    <h2>Security aspects for the swarm mode</h2>
+    <a href="#1">General security aspects of the swarm mode</a><br>
+    <a href="#2">Overlay networks with encryption</a><br>
+    <a href="#3">Overlay networks with load balancing and fault tolerance in the swarm</a><br>
+    <a href="#4">Locking swarms and rotating the encryption keys</a><br>
+    <br>
+    <h2 id="1">General security aspects of the swarm mode</h2>
+    <section>
+    <p>
+      The swarm mode includes many security aspects natively. 
+      <ul>
+        <li>
+          <p>TLS mutual authentication and encryption for secure communitcation.</p>
+        </li>
+        <li>
+          <p>Locking swarms by protecting the encryption keys.
+        </li>
+        <li>
+          <p>Load balancing for a service by using the ingress network as an onverlay network</p>
+        </li>
+      </ul> 
+    </p>
+    <p>
+      <a href="https://docs.docker.com/engine/swarm/key-concepts/">
+      Swarm mode key concepts</a>
+    </p>
+    <br>
+    </section>
+    <h2 id="2">Overlay networks with encryption</h2>
+    <section>
+    <p>
+    The swarm mode encourage you to create your own overlay network. This network is used for load balancing and encryption.
+    The swarm management traffic is encrypted by default and the manager nodes rotate the encryption key for the gossip data every 12 hours.
+    It is recommended to encrypt the application data as well. You can do that by adding the <b>--opt encrypted</b> flag to your docker network create command.
+    Using the second encryption for application data is optional and you have to take into account that it affects the performance and test it before using in production.
+    Some not irrelevant side benefits of using an overlay network is also that you do not need to expose ports for your services and that again works well with 
+    encryption of the application data.
+    <br>
+    Attaching standalone containers is also possible if you want to run them independently of the swarm services.
+    </p>
+    <b>Overlay network creation example</b>
+    <br>
+    <pre>| docker network create --opt encrypted --driver overlay --attachable my-attachable-multi-host-network</pre>
+    to attach a standalone container, add <pre>--attachable attachable-overlay</pre>
+    </p>
+      <section class="component-row">
+      <h4>1. What is correct when using overlay networks?</h4>
+      <vscode-checkbox id="1_1_sm_checkbox">The used algorithm to encrypt the management data is AES</vscode-checkbox><br>
+      <vscode-checkbox id="1_2_sm_checkbox">Management data is encrypted by adding --opt encryption</vscode-checkbox><br>
+      <vscode-checkbox id="1_3_sm_checkbox">The encryption of application data can be done without any downsides</vscode-checkbox><br>
+      <vscode-button id="question1_sm_submit">Submit answer</vscode-button> 
+      </section>
+    </section>
+    <h2 id="3">Overlay networks with load balancing and fault tolerance in the swarm</h2>
+    <section>
+    <p>
+    In a larger scale swarm it is recommended to run the manager as management-only nodes. By default the scheduler assigns to them, so they fulfill both management and worker roles.
+    By draining a manager node you can prevent possible interferences with other operations, so they are not working as a worker node anymore.
+    Having multiple worker nodes is also a good way to balance the swarm's load, because replicated tasks are distributed over the nodes evenly if they comply with the service requirements.
+    You can also use external load balancers, one to recommended is HAProxy. HAProxy has a clear documentation and you can declare the config of the proxy to function for your specific use case.
+    <p>
+      <a href="https://docs.docker.com/engine/swarm/admin_guide/#add-manager-nodes-for-fault-tolerance">
+      More information for fault tolerance with managager nodes in a swarm</a>
+    </p>
+    <p>
+      <a href="https://docs.docker.com/engine/swarm/admin_guide/#run-manager-only-nodes">
+      More information for specifiying manager nodes</a>
+    </p>
+    <p>
+     <a href="https://docs.docker.com/engine/swarm/ingress/#configure-an-external-load-balancer">
+      More information for external load balancers</a>
+    </p>
+    <b>Useful commands</b>
+    <br>
+    <pre>| docker node update --availability drain node-to-drain</pre>
+      <section class="component-row">
+      <h4>2. Please select correct answers</h4>
+      <vscode-checkbox id="2_1_sm_checkbox">When adding a worker node to a swarm every service task can run on that node</vscode-checkbox><br>
+      <vscode-checkbox id="2_2_sm_checkbox">You need to manually assign tasks to a manager node so it can function as a worker node</vscode-checkbox><br>
+      <vscode-checkbox id="2_3_sm_checkbox">Draining a node only affect a single manager node in the swarm</vscode-checkbox><br>
+      <vscode-button id="question2_sm_submit">Submit answer</vscode-button> 
+      </section>
+    </section>
+    <h2 id="4">Locking swarms and rotating the encryption keys</h2>
+    <section>
+    <p>
+    The raft logs, which are used for storing the swarm state with all actions in the cluster, are replicated on every manager node and encrypted by default. 
+    Raft consensus is used to tolerate fault tolerance to a certain degree. You can read more to that in the docker documentation.
+    Both the keys for TLS and Raft encryption are loaded into the node's memory by start of the docker engine. At rest you still have the ability to manually 
+    unlock the manager nodes and that is called autolock. It is recommended to use autolock, because it prevents unauthorized access to the swarm state at rest.
+    You can do that for both running and initializing a swarm. Storing the key to unlock your swarm is therefore necessary.
+    Rotating this encryption key periodically is a good practice which should be done. 
+    Using the autolock feature is relevant because without this enabled feature an attacker could possibly read the memory of a manager node and with gain access to the loaded keys.
+    <p>
+      <a href="https://docs.docker.com/engine/swarm/swarm_manager_locking/">
+      Locking swarms</a>
+    </p>
+    <p>
+      <a href="https://docs.docker.com/engine/swarm/raft/">
+      Raft protocol and raft consensus</a>
+    </p>
+    <b>Initial locking</b>
+    <br>
+    <pre>| docker swarm init --autolock</pre>
+    <b>Lock an existing swarm</b>
+    <br>
+    <pre>| docker swarm update --autolock=true</pre>
+    <b>Rotate the unlock key</b>
+    <br>
+    <pre>| docker swarm unlock-key --rotate</pre>
+    <section class="component-row">
+     <h4>3. What is not correct for raft and autolock</h4>
+     <vscode-checkbox id="3_1_sm_checkbox">If the the swarm cannot build a majority in the quorum for Raft, the scheduler can only assign new tasks to the still existing nodes</vscode-checkbox><br>
+     <vscode-checkbox id="3_2_sm_checkbox">Keeping record of the old key for a few minutes if a manager goes down before recieving the new key is recommended</vscode-checkbox><br>
+     <vscode-checkbox id="3_3_sm_checkbox">When disabling autolock the manager node's memory can be read an with that the keys can be accessed</vscode-checkbox><br>
+     <vscode-button id="question3_sm_submit">Submit answer</vscode-button> 
+    </section>
+    </section>
+    <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
+  </body>
+</html>
+    `);
 }

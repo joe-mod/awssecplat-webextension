@@ -21,6 +21,10 @@ const catalogCheckboxes = {
   "question1_dc_submit": ["1_1_dc_checkbox", "1_2_dc_checkbox", "1_3_dc_checkbox"],
   "question2_dc_submit": ["2_1_dc_checkbox", "2_2_dc_checkbox", "2_3_dc_checkbox"],
   "question3_dc_submit": ["3_1_dc_checkbox", "3_2_dc_checkbox", "3_3_dc_checkbox"],
+  //Swarm buttons
+  "question1_sm_submit": ["1_1_sm_checkbox", "1_2_sm_checkbox", "1_3_sm_checkbox"],
+  "question2_sm_submit": ["2_1_sm_checkbox", "2_2_sm_checkbox", "2_3_sm_checkbox"],
+  "question3_sm_submit": ["3_1_sm_checkbox", "3_2_sm_checkbox", "3_3_sm_checkbox"],
 };
 
 const correctQuestionsCheckboxes = {
@@ -35,6 +39,10 @@ const correctQuestionsCheckboxes = {
   "question1_dc_submit": ["1_1_dc_checkbox", "1_2_dc_checkbox"],
   "question2_dc_submit": ["2_2_dc_checkbox"],
   "question3_dc_submit": ["3_1_dc_checkbox"],
+  //Swarm buttons
+  "question1_sm_submit": ["1_1_sm_checkbox"],
+  "question2_sm_submit": ["2_3_sm_checkbox"],
+  "question3_sm_submit": ["3_1_sm_checkbox", "3_2_sm_checkbox"],
 };
 
 

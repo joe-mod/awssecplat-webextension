@@ -1,35 +1,30 @@
-# awssecplat-webextension README
+# Awarness Security Platform
 
-This is the README for your extension "awssecplat-webextension". After writing up a brief description, we recommend including the following sections.
+This extension is a prototype for a learning platform designed to enhance security awareness in containerized environments, focusing on Docker and tailored for Linux containers. The goal is to provide the user with knowledge and tools necessary for writing secure Dockerfiles, Compose securely, and understanding Docker Swarm Mode from a security perspective.
 
-## Features
+### Educational Question Catalog
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Comprehensive Learning Resource**: Access a detailed question catalog covering Dockerfile, Compose, and Swarm Mode.
+- **Security Best Practices**: Learn to write secure Docker images and harden containers with guided questions and answers.
 
-For example if there is an image subfolder under your extension project workspace:
+### Language Server Integration
 
-\!\[feature X\]\(images/feature-x.png\)
+- **Keyword Completion**: Enhance your coding efficiency with keyword completions specific to Docker and container security.
+- **"Safe" Base Image Suggestions**: Receive recommendations for secure base images for your Dockerfiles.
+- **Security Linter**: Automatically detect and underline unsafe code lines, aiding in writing secure container code.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### Container Scan Feature
+
+- **In-depth Container Analysis**: Perform security scans on containers based on the docker-bench-security script to identify vulnerabilities and receive mitigation suggestions.
+
+### Image Scan Feature
+
+- **Robust Image Examination**: Scan Docker images based on docker scout for security vulnerabilities and get detailed reports to improve your image security.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- **Docker**: Docker must be installed and running on your system to this extension to its fullest extent.
+- **Linux Containers**: This extension is designed for Docker Linux containers.
 
 ## Release Notes
 
@@ -37,29 +32,8 @@ Users appreciate release notes as you update your extension.
 
 ### 1.0.0
 
-Initial release of ...
+Initial release of Awareness Security Platform
 
-### 1.0.1
+## License
 
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+This project is licensed under the terms of the MIT license.

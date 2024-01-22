@@ -1,7 +1,11 @@
 {
   "name": "awssecplat-webextension",
+  "publisher": "joemod",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joe-mod/awssecplat-webextension"},
   "displayName": "awssecplat-webextension",
-  "description": "",
+  "description": "This extension is a prototype for a learning platform designed to enhance security awareness in containerized environments.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.85.0"

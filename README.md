@@ -24,6 +24,7 @@ This extension is a prototype for a learning platform designed to enhance securi
 ## Requirements
 
 - **Docker**: Docker must be installed and running on your system to this extension to its fullest extent.
+- **Docker Scout**: Docker Scout must be installed on your system
 - **Linux Containers**: This extension is designed for Docker Linux containers.
 
 ## Release Notes
